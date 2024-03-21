@@ -13,13 +13,6 @@ Disclaimer: Redis is a registered trademark of Redis Ltd. Any rights therein are
 docker run --name redis-sentinel -e REDIS_MASTER_HOST=redis bitnami/redis-sentinel:latest
 ```
 
-### Docker Compose
-
-```console
-curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/redis-sentinel/docker-compose.yml > docker-compose.yml
-docker-compose up -d
-```
-
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Environment Variables](#environment-variables) section for a more secure deployment.
 
 ## Why use Bitnami Images?
@@ -28,7 +21,7 @@ docker-compose up -d
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Redis&reg; Sentinel in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -105,93 +98,6 @@ docker run -it --rm \
     bitnami/redis-sentinel:latest
 ```
 
-### Using a Docker Compose file
-
-When not specified, Docker Compose automatically sets up a new network and attaches all deployed services to that network. However, we will explicitly define a new `bridge` network named `app-tier`. In this example we assume that you want to connect to the Redis(R) server from your own custom application image which is identified in the following snippet by the service name `myapp`.
-
-```yaml
-version: '2'
-
-networks:
-  app-tier:
-    driver: bridge
-
-services:
-  redis:
-    image: 'bitnami/redis:latest'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    networks:
-      - app-tier
-  redis-sentinel:
-    image: 'bitnami/redis-sentinel:latest'
-    environment:
-      - REDIS_MASTER_HOST=redis
-    ports:
-      - '26379:26379'
-    networks:
-      - app-tier
-```
-
-Launch the containers using:
-
-```console
-docker-compose up -d
-```
-
-#### Using Master-Slave setups
-
-When using Sentinel in Master-Slave setup, if you want to set the passwords for Master and Slave nodes, consider having the **same** `REDIS_PASSWORD` and `REDIS_MASTER_PASSWORD` for them.
-
-```yaml
-version: '2'
-
-networks:
-  app-tier:
-    driver: bridge
-
-services:
-  redis:
-    image: 'bitnami/redis:latest'
-    environment:
-      - REDIS_REPLICATION_MODE=master
-      - REDIS_PASSWORD=str0ng_passw0rd
-    networks:
-      - app-tier
-    ports:
-      - '6379'
-  redis-slave:
-    image: 'bitnami/redis:latest'
-    environment:
-      - REDIS_REPLICATION_MODE=slave
-      - REDIS_MASTER_HOST=redis
-      - REDIS_MASTER_PASSWORD=str0ng_passw0rd
-      - REDIS_PASSWORD=str0ng_passw0rd
-    ports:
-      - '6379'
-    depends_on:
-      - redis
-    networks:
-      - app-tier
-  redis-sentinel:
-    image: 'bitnami/redis-sentinel:latest'
-    environment:
-      - REDIS_MASTER_PASSWORD=str0ng_passw0rd
-    depends_on:
-      - redis
-      - redis-slave
-    ports:
-      - '26379-26381:26379'
-    networks:
-      - app-tier
-```
-
-Launch the containers using:
-
-```console
-docker-compose up --scale redis-sentinel=3 -d
-```
-
 ## Configuration
 
 ### Environment variables
@@ -225,6 +131,7 @@ docker-compose up --scale redis-sentinel=3 -d
 | `REDIS_SENTINEL_VOLUME_DIR`          | Persistence base directory            | `/bitnami/redis-sentinel`                      |
 | `REDIS_SENTINEL_BASE_DIR`            | Redis installation directory          | `${BITNAMI_ROOT_DIR}/redis-sentinel`           |
 | `REDIS_SENTINEL_CONF_DIR`            | Redis configuration directory         | `${REDIS_SENTINEL_BASE_DIR}/etc`               |
+| `REDIS_SENTINEL_DEFAULT_CONF_DIR`    | Redis default configuration directory | `${REDIS_SENTINEL_BASE_DIR}/etc.default`       |
 | `REDIS_SENTINEL_MOUNTED_CONF_DIR`    | Redis mounted configuration directory | `${REDIS_SENTINEL_BASE_DIR}/mounted-etc`       |
 | `REDIS_SENTINEL_CONF_FILE`           | Redis configuration file              | `${REDIS_SENTINEL_CONF_DIR}/sentinel.conf`     |
 | `REDIS_SENTINEL_LOG_DIR`             | Redis logs directory                  | `${REDIS_SENTINEL_BASE_DIR}/logs`              |
@@ -257,24 +164,6 @@ When enabling TLS, conventional standard traffic is disabled by default. However
         bitnami/redis-sentinel:latest
     ```
 
-2. Modifying the `docker-compose.yml` file present in this repository:
-
-    ```yaml
-      redis-sentinel:
-      ...
-        environment:
-          ...
-          - REDIS_SENTINEL_TLS_ENABLED=yes
-          - REDIS_SENTINEL_TLS_CERT_FILE=/opt/bitnami/redis/certs/redis.crt
-          - REDIS_SENTINEL_TLS_KEY_FILE=/opt/bitnami/redis/certs/redis.key
-          - REDIS_SENTINEL_TLS_CA_FILE=/opt/bitnami/redis/certs/redisCA.crt
-        ...
-        volumes:
-          - /path/to/certs:/opt/bitnami/redis/certs
-        ...
-      ...
-    ```
-
 Alternatively, you may also provide with this configuration in your [custom](https://github.com/bitnami/containers/blob/main/bitnami/redis-sentinel#configuration-file) configuration file.
 
 ### Configuration file
@@ -290,17 +179,6 @@ docker run --name redis-sentinel \
     -e REDIS_MASTER_HOST=redis \
     -v /path/to/redis-sentinel/persistence:/bitnami \
     bitnami/redis-sentinel:latest
-```
-
-You can also modify the [`docker-compose.yml`](https://github.com/bitnami/containers/blob/main/bitnami/redis-sentinel/docker-compose.yml) file present in this repository:
-
-```yaml
-services:
-  redis-sentinel:
-  ...
-    volumes:
-      - /path/to/redis-persistence:/bitnami
-  ...
 ```
 
 #### Step 2: Edit the configuration
@@ -319,12 +197,6 @@ After changing the configuration, restart your Redis(R) container for changes to
 docker restart redis
 ```
 
-or using Docker Compose:
-
-```console
-docker-compose restart redis
-```
-
 Refer to the [Redis(R) configuration](http://redis.io/topics/config) manual for the complete list of configuration options.
 
 ## Logging
@@ -333,12 +205,6 @@ The Bitnami Redis(R) Sentinel Docker Image sends the container logs to the `stdo
 
 ```console
 docker logs redis
-```
-
-or using Docker Compose:
-
-```console
-docker-compose logs redis
 ```
 
 You can configure the containers [logging driver](https://docs.docker.com/engine/admin/logging/overview/) using the `--log-driver` option if you wish to consume the container logs differently. In the default configuration docker uses the `json-file` driver.
@@ -355,21 +221,12 @@ Bitnami provides up-to-date versions of Redis(R) Sentinel, including security pa
 docker pull bitnami/redis-sentinel:latest
 ```
 
-or if you're using Docker Compose, update the value of the image property to
-`bitnami/redis-sentinel:latest`.
-
 #### Step 2: Stop and backup the currently running container
 
 Stop the currently running container using the command
 
 ```console
 docker stop redis
-```
-
-or using Docker Compose:
-
-```console
-docker-compose stop redis
 ```
 
 Next, take a snapshot of the persistent volume `/path/to/redis-persistence` using:
@@ -384,12 +241,6 @@ rsync -a /path/to/redis-persistence /path/to/redis-persistence.bkp.$(date +%Y%m%
 docker rm -v redis
 ```
 
-or using Docker Compose:
-
-```console
-docker-compose rm -v redis
-```
-
 #### Step 4: Run the new image
 
 Re-create your container from the new image.
@@ -398,13 +249,11 @@ Re-create your container from the new image.
 docker run --name redis bitnami/redis-sentinel:latest
 ```
 
-or using Docker Compose:
-
-```console
-docker-compose up redis
-```
-
 ## Notable Changes
+
+### Starting January 16, 2024
+
+* The `docker-compose.yaml` file has been removed, as it was solely intended for internal testing purposes.
 
 ### 4.0.14-debian-9-r201, 4.0.14-ol-7-r222, 5.0.5-debian-9-r169, 5.0.5-ol-7-r175
 

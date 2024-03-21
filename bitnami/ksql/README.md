@@ -18,7 +18,7 @@ docker run --name ksql bitnami/ksql:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use ksql in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -52,6 +52,37 @@ git clone https://github.com/bitnami/containers.git
 cd bitnami/APP/VERSION/OPERATING-SYSTEM
 docker build -t bitnami/APP:latest .
 ```
+
+## Environment variables
+
+### Customizable environment variables
+
+| Name                    | Description                                                                                   | Default Value            |
+|-------------------------|-----------------------------------------------------------------------------------------------|--------------------------|
+| `KSQL_MOUNTED_CONF_DIR` | Directory for including custom configuration files (that override the default generated ones) | `${KSQL_VOLUME_DIR}/etc` |
+
+### Read-only environment variables
+
+| Name                             | Description                                                                               | Value                                     |
+|----------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------|
+| `KSQL_BASE_DIR`                  | Base path for KSQL files.                                                                 | `${BITNAMI_ROOT_DIR}/ksql`                |
+| `KSQL_VOLUME_DIR`                | KSQL directory for persisted files.                                                       | `${BITNAMI_VOLUME_DIR}/ksql`              |
+| `KSQL_DATA_DIR`                  | KSQL data directory.                                                                      | `${KSQL_VOLUME_DIR}/data`                 |
+| `KSQL_BIN_DIR`                   | KSQL bin directory.                                                                       | `${KSQL_BASE_DIR}/bin`                    |
+| `KSQL_CONF_DIR`                  | KSQL configuration directory.                                                             | `${KSQL_BASE_DIR}/etc/ksqldb`             |
+| `KSQL_LOGS_DIR`                  | KSQL logs directory.                                                                      | `${KSQL_BASE_DIR}/logs`                   |
+| `KSQL_CONF_FILE`                 | Main KSQL configuration file.                                                             | `${KSQL_CONF_DIR}/ksql-server.properties` |
+| `KSQL_CERTS_DIR`                 | KSQL certificates directory.                                                              | `${KSQL_BASE_DIR}/certs`                  |
+| `KSQL_DAEMON_USER`               | Users that will execute the KSQL Server process.                                          | `ksql`                                    |
+| `KSQL_DAEMON_GROUP`              | Group that will execute the KSQL Server process.                                          | `ksql`                                    |
+| `KSQL_DEFAULT_LISTENERS`         | Comma-separated list of listeners that listen for API requests over either HTTP or HTTPS. | `http://0.0.0.0:8088`                     |
+| `KSQL_DEFAULT_BOOTSTRAP_SERVERS` | List of Kafka brokers to bootstrap Kafka cluster information from.                        | `localhost:9092`                          |
+
+## Notable Changes
+
+### Starting January 16, 2024
+
+* The `docker-compose.yaml` file has been removed, as it was solely intended for internal testing purposes.
 
 ## Contributing
 

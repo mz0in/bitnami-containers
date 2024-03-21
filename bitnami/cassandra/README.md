@@ -21,7 +21,7 @@ You can find the default credentials and available configuration options in the 
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Apache Cassandra in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -196,6 +196,7 @@ docker-compose up -d
 | `CASSANDRA_INIT_SLEEP_TIME`                        | Sleep time for init startup operations.                                                 | `5`                                          |
 | `CASSANDRA_PEER_CQL_MAX_RETRIES`                   | Maximum retries for peer startup operations.                                            | `100`                                        |
 | `CASSANDRA_PEER_CQL_SLEEP_TIME`                    | Sleep time for peer startup operations.                                                 | `10`                                         |
+| `CASSANDRA_DELAY_START_TIME`                       | Delay Cassandra start by the number of provided seconds.                                | `0`                                          |
 | `CASSANDRA_AUTO_SNAPSHOT_TTL`                      | Take an automatic snapshot of the data before truncating a keyspace or dropping a table | `30d`                                        |
 | `ALLOW_EMPTY_PASSWORD`                             | Allow no credentials in the installation.                                               | `no`                                         |
 | `CASSANDRA_AUTHORIZER`                             | Cassandra connection authorizer.                                                        | `CassandraAuthorizer`                        |
@@ -238,8 +239,9 @@ Additionally, any environment variable beginning with the following prefix will 
 * `CASSANDRA_CFG_ENV_`: Will add the corresponding key and the provided value to `cassandra-env.sh`.
 * `CASSANDRA_CFG_RACKDC_`: Will add the corresponding key and the provided value to `cassandra-rackdc.properties`.
 * `CASSANDRA_CFG_COMMITLOG_`: Will add the corresponding key and the provided value to `commitlog_archiving.properties`.
+* `CASSANDRA_CFG_YAML_`: Will add the corresponding key and the provided value to `cassandra.yaml`.
 
-For example, use `CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true` in order to configure `prefer_local` in `cassandra-rackdc.properties`.
+For example, use `CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true` in order to configure `prefer_local` in `cassandra-rackdc.properties`. Or, use `CASSANDRA_CFG_YAML_INTERNODE_COMPRESSION=all` in order to set `internode_compression` to `all` in `cassandra.yaml`.
 
 **NOTE:** Environment variables will be omitted when mounting a configuration file
 

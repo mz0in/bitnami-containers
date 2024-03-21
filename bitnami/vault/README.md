@@ -13,20 +13,13 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 docker run -it --name vault bitnami/vault
 ```
 
-### Docker Compose
-
-```console
-curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/vault/docker-compose.yml > docker-compose.yml
-docker-compose up -d
-```
-
 ## Why use Bitnami Images?
 
 * Bitnami closely tracks upstream source changes and promptly publishes new versions of this image using our automated systems.
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use HashiCorp Vault in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -73,18 +66,10 @@ Bitnami provides up-to-date versions of HashiCorp Vault, including security patc
 docker pull bitnami/vault:latest
 ```
 
-or if you're using Docker Compose, update the value of the image property to `bitnami/vault:latest`.
-
 #### Step 2: Remove the currently running container
 
 ```console
 docker rm -v vault
-```
-
-or using Docker Compose:
-
-```console
-docker-compose rm -v vault
 ```
 
 #### Step 3: Run the new image
@@ -93,12 +78,6 @@ Re-create your container from the new image.
 
 ```console
 docker run --name vault bitnami/vault:latest
-```
-
-or using Docker Compose:
-
-```console
-docker-compose up vault
 ```
 
 ## Configuration
@@ -112,6 +91,12 @@ docker run --rm --name vault bitnami/vault:latest --help
 ```
 
 Check the [official HashiCorp Vault documentation](https://www.vaultproject.io/) for more information about how to use HashiCorp Vault.
+
+## Notable Changes
+
+### Starting January 16, 2024
+
+* The `docker-compose.yaml` file has been removed, as it was solely intended for internal testing purposes.
 
 ## Contributing
 

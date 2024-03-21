@@ -13,20 +13,13 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 docker run --name memcached bitnami/memcached:latest
 ```
 
-### Docker Compose
-
-```console
-curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/memcached/docker-compose.yml > docker-compose.yml
-docker-compose up -d
-```
-
 ## Why use Bitnami Images?
 
 * Bitnami closely tracks upstream source changes and promptly publishes new versions of this image using our automated systems.
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Memcached in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -142,6 +135,37 @@ docker-compose up -d
 ```
 
 ## Configuration
+
+### Environment variables
+
+#### Customizable environment variables
+
+| Name                        | Description                                                            | Default Value |
+|-----------------------------|------------------------------------------------------------------------|---------------|
+| `MEMCACHED_LISTEN_ADDRESS`  | Host that the Memcached service will bind to.                          | `nil`         |
+| `MEMCACHED_PORT_NUMBER`     | Port number used by Memcached.                                         | `11211`       |
+| `MEMCACHED_USERNAME`        | Memcached admin username.                                              | `root`        |
+| `MEMCACHED_PASSWORD`        | Password for the Memcached admin user.                                 | `nil`         |
+| `MEMCACHED_MAX_ITEM_SIZE`   | Memcached maximum item size.                                           | `nil`         |
+| `MEMCACHED_EXTRA_FLAGS`     | Extra flags to be used when running Memcached.                         | `nil`         |
+| `MEMCACHED_MAX_TIMEOUT`     | Maximum timeout in seconds for Memcached to start or stop.             | `5`           |
+| `MEMCACHED_CACHE_SIZE`      | Memcached cache size in MB.                                            | `nil`         |
+| `MEMCACHED_MAX_CONNECTIONS` | Maximum amount of concurrent connections that Memcached will tolerate. | `nil`         |
+| `MEMCACHED_THREADS`         | Amount of process threads that Memcached will use.                     | `nil`         |
+
+#### Read-only environment variables
+
+| Name                         | Description                                 | Value                                |
+|------------------------------|---------------------------------------------|--------------------------------------|
+| `MEMCACHED_BASE_DIR`         | Memcached installation directory.           | `${BITNAMI_ROOT_DIR}/memcached`      |
+| `MEMCACHED_CONF_DIR`         | Memcached configuration directory.          | `${MEMCACHED_BASE_DIR}/conf`         |
+| `MEMCACHED_DEFAULT_CONF_DIR` | Memcached configuration directory.          | `${MEMCACHED_BASE_DIR}/conf.default` |
+| `MEMCACHED_BIN_DIR`          | Memcached directory for binary executables. | `${MEMCACHED_BASE_DIR}/bin`          |
+| `SASL_CONF_PATH`             | Memcached SASL configuration directory.     | `${MEMCACHED_CONF_DIR}/sasl2`        |
+| `SASL_CONF_FILE`             | Memcached SASL configuration                | `${SASL_CONF_PATH}/memcached.conf`   |
+| `SASL_DB_FILE`               | Memcached SASL database file.               | `${SASL_CONF_PATH}/memcachedsasldb`  |
+| `MEMCACHED_DAEMON_USER`      | Memcached system user.                      | `memcached`                          |
+| `MEMCACHED_DAEMON_GROUP`     | Memcached system group.                     | `memcached`                          |
 
 ### Specify the cache size
 
@@ -365,6 +389,12 @@ docker-compose up memcached
 ### 1.4.25-r0
 
 * The logs are always sent to the `stdout` and are no longer collected in the volume.
+
+## Using `docker-compose.yaml`
+
+Please be aware this file has not undergone internal testing. Consequently, we advise its use exclusively for development or testing purposes. For production-ready deployments, we highly recommend utilizing its associated [Bitnami Helm chart](https://github.com/bitnami/charts/tree/main/bitnami/memcached).
+
+If you detect any issue in the `docker-compose.yaml` file, feel free to report it or contribute with a fix by following our [Contributing Guidelines](https://github.com/bitnami/containers/blob/main/CONTRIBUTING.md).
 
 ## Contributing
 

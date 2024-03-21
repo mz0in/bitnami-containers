@@ -13,20 +13,13 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 docker run -it --name supabase-studio bitnami/supabase-studio
 ```
 
-### Docker Compose
-
-```console
-curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/supabase-studio/docker-compose.yml > docker-compose.yml
-docker-compose up -d
-```
-
 ## Why use Bitnami Images?
 
 * Bitnami closely tracks upstream source changes and promptly publishes new versions of this image using our automated systems.
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Supabase in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -73,18 +66,10 @@ Bitnami provides up-to-date versions of Supabase, including security patches, so
 docker pull bitnami/supabase-studio:latest
 ```
 
-or if you're using Docker Compose, update the value of the image property to `bitnami/supabase-studio:latest`.
-
 #### Step 2: Remove the currently running container
 
 ```console
 docker rm -v supabase-studio
-```
-
-or using Docker Compose:
-
-```console
-docker-compose rm -v supabase-studio
 ```
 
 #### Step 3: Run the new image
@@ -95,39 +80,35 @@ Re-create your container from the new image.
 docker run --name supabase-studio bitnami/supabase-studio:latest
 ```
 
-or using Docker Compose:
-
-```console
-docker-compose up supabase-studio
-```
-
 ## Configuration
 
 ### Environment variables
 
-| Name                             | Description                                                         | Default Value                         | Can be set |
-|----------------------------------|---------------------------------------------------------------------|---------------------------------------|------------|
-| `$SUPABASE_BASE_DIR`             | Supabase installation directory.                                    | `${BITNAMI_ROOT_DIR}/supabase`        |            |
-| `$SUPABASE_LOGS_DIR`             | Directory where Supabas logs are stored.                            | `${SUPABASE_BASE_DIR}/logs`           |            |
-| `$SUPABASE_LOG_FILE`             | Directory where Supabase logs are stored.                           | `${SUPABASE_LOGS_DIR}/supabase.log`   |            |
-| `$SUPABASE_BIN_DIR`              | Supabase directory for binary files.                                | `${SUPABASE_BASE_DIR}/bin`            |            |
-| `$SUPABASE_SECRETS_DIR`          | Directory where Supabase keys files are stored.                     | `${SUPABASE_BASE_DIR}/keys`           | &check;    |
-| `$SUPABASE_TMP_DIR`              | Directory where Supabase temporary files are stored.                | `${SUPABASE_BASE_DIR}/tmp`            |            |
-| `$SUPABASE_PID_FILE`             | Path to the PID file for Supabase.                                  | `${SUPABASE_TMP_DIR}/supabase.pid`    |            |
-| `$SUPABASE_EXTRA_ENV_FILE`       | File to store extra environment variables for the supabase service. | `${SUPABASE_BASE_DIR}/.env`           |            |
-| `$SUPABASE_ANON_KEY_FILENAME`    | Supabase anon key filename                                          | `${SUPABASE_SECRETS_DIR}/anon-key`    | &check;    |
-| `$SUPABASE_SERVICE_KEY_FILENAME` | Supabase service key filename                                       | `${SUPABASE_SECRETS_DIR}/service-key` | &check;    |
-| `$SUPABASE_SECRET_KEY_FILENAME`  | Supabase admin key filename                                         | `${SUPABASE_SECRETS_DIR}/secret`      | &check;    |
-| `$SUPABASE_ANON_KEY`             | Supabase anon key                                                   |                                       | &check;    |
-| `$SUPABASE_SERVICE_KEY`          | Supabase service key                                                |                                       | &check;    |
-| `$SUPABASE_SECRET_KEY`           | Supabase admin key                                                  |                                       | &check;    |
-| `$PORT`                          | Supabase service port                                               | `4000`                                | &check;    |
-| `$SUPABASE_PUBLIC_URL`           | Supabase public urli                                                | `http://localhost:80`                 | &check;    |
-| `$STUDIO_PG_META_URL`            | Supabase PG Meta URL                                                | `http://localhost/pg`                 | &check;    |
-| `$SUPABASE_URL`                  | Supabase URL                                                        | `http://localhost/`                   | &check;    |
-| `$SUPABASE_DAEMON_USER`          | postgrest system user.                                              | `supabase`                            |            |
-| `$SUPABASE_DAEMON_GROUP`         | postgrest system group.                                             | `supabase`                            |            |
+#### Customizable environment variables
 
+| Name                            | Description                   | Default Value                         |
+|---------------------------------|-------------------------------|---------------------------------------|
+| `SUPABASE_ANON_KEY_FILENAME`    | Supabase anon key filename    | `${SUPABASE_SECRETS_DIR}/anon-key`    |
+| `SUPABASE_SERVICE_KEY_FILENAME` | Supabase service key filename | `${SUPABASE_SECRETS_DIR}/service-key` |
+| `SUPABASE_SECRET_KEY_FILENAME`  | Supabase admin key filename   | `${SUPABASE_SECRETS_DIR}/secret`      |
+| `SUPABASE_ANON_KEY`             | Supabase anon key             | `nil`                                 |
+| `SUPABASE_SERVICE_KEY`          | Supabase service key          | `nil`                                 |
+| `SUPABASE_SECRET_KEY`           | Supabase admin key            | `nil`                                 |
+| `PORT`                          | Supabase service port         | `4000`                                |
+| `SUPABASE_PUBLIC_URL`           | Supabase public urli          | `http://localhost:80`                 |
+| `STUDIO_PG_META_URL`            | Supabase PG Meta URL          | `http://localhost/pg`                 |
+| `SUPABASE_URL`                  | Supabase URL                  | `http://localhost/`                   |
+
+#### Read-only environment variables
+
+| Name                    | Description                               | Value                               |
+|-------------------------|-------------------------------------------|-------------------------------------|
+| `SUPABASE_BASE_DIR`     | Supabase installation directory.          | `${BITNAMI_ROOT_DIR}/supabase`      |
+| `SUPABASE_LOGS_DIR`     | Directory where Supabas logs are stored.  | `${SUPABASE_BASE_DIR}/logs`         |
+| `SUPABASE_LOG_FILE`     | Directory where Supabase logs are stored. | `${SUPABASE_LOGS_DIR}/supabase.log` |
+| `SUPABASE_BIN_DIR`      | Supabase directory for binary files.      | `${SUPABASE_BASE_DIR}/bin`          |
+| `SUPABASE_DAEMON_USER`  | postgrest system user.                    | `supabase`                          |
+| `SUPABASE_DAEMON_GROUP` | postgrest system group.                   | `supabase`                          |
 
 ### Running commands
 
@@ -138,6 +119,12 @@ docker run --rm --name supabase-studio bitnami/supabase-studio:latest --help
 ```
 
 Check the [official Supabase documentation](https://supabase.com/) for more information about how to use Supabase.
+
+## Notable Changes
+
+### Starting January 16, 2024
+
+* The `docker-compose.yaml` file has been removed, as it was solely intended for internal testing purposes.
 
 ## Contributing
 

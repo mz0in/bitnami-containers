@@ -21,7 +21,7 @@ docker run --name kibana bitnami/kibana:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Kibana in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -178,25 +178,27 @@ docker run -d --name myapp \
 
 #### Read-only environment variables
 
-| Name                      | Description                                                                                   | Value                           |
-|---------------------------|-----------------------------------------------------------------------------------------------|---------------------------------|
-| `SERVER_FLAVOR`           | Server flavor. Valid values: `kibana` or `opensearch-dashboards`.                             | `kibana`                        |
-| `BITNAMI_VOLUME_DIR`      | Directory where to mount volumes                                                              | `/bitnami`                      |
-| `KIBANA_VOLUME_DIR`       | Kibana persistence directory                                                                  | `${BITNAMI_VOLUME_DIR}/kibana`  |
-| `KIBANA_BASE_DIR`         | Kibana installation directory                                                                 | `${BITNAMI_ROOT_DIR}/kibana`    |
-| `KIBANA_CONF_DIR`         | Kibana configuration directory                                                                | `${SERVER_BASE_DIR}/config`     |
-| `KIBANA_LOGS_DIR`         | Kibana logs directory                                                                         | `${SERVER_BASE_DIR}/logs`       |
-| `KIBANA_TMP_DIR`          | Kibana temporary directory                                                                    | `${SERVER_BASE_DIR}/tmp`        |
-| `KIBANA_BIN_DIR`          | Kibana executable directory                                                                   | `${SERVER_BASE_DIR}/bin`        |
-| `KIBANA_PLUGINS_DIR`      | Kibana plugins directory                                                                      | `${SERVER_BASE_DIR}/plugins`    |
-| `KIBANA_DATA_DIR`         | Kibana data directory                                                                         | `${SERVER_VOLUME_DIR}/data`     |
-| `KIBANA_MOUNTED_CONF_DIR` | Directory for including custom configuration files (that override the default generated ones) | `${SERVER_VOLUME_DIR}/conf`     |
-| `KIBANA_CONF_FILE`        | Path to Kibana configuration file                                                             | `${SERVER_CONF_DIR}/kibana.yml` |
-| `KIBANA_LOG_FILE`         | Path to the Kibana log file                                                                   | `${SERVER_LOGS_DIR}/kibana.log` |
-| `KIBANA_PID_FILE`         | Path to the Kibana pid file                                                                   | `${SERVER_TMP_DIR}/kibana.pid`  |
-| `KIBANA_INITSCRIPTS_DIR`  | Path to the Kibana container init scripts directory                                           | `/docker-entrypoint-initdb.d`   |
-| `KIBANA_DAEMON_USER`      | Kibana system user                                                                            | `kibana`                        |
-| `KIBANA_DAEMON_GROUP`     | Kibana system group                                                                           | `kibana`                        |
+| Name                         | Description                                                                                   | Value                                |
+|------------------------------|-----------------------------------------------------------------------------------------------|--------------------------------------|
+| `SERVER_FLAVOR`              | Server flavor. Valid values: `kibana` or `opensearch-dashboards`.                             | `kibana`                             |
+| `BITNAMI_VOLUME_DIR`         | Directory where to mount volumes                                                              | `/bitnami`                           |
+| `KIBANA_VOLUME_DIR`          | Kibana persistence directory                                                                  | `${BITNAMI_VOLUME_DIR}/kibana`       |
+| `KIBANA_BASE_DIR`            | Kibana installation directory                                                                 | `${BITNAMI_ROOT_DIR}/kibana`         |
+| `KIBANA_CONF_DIR`            | Kibana configuration directory                                                                | `${SERVER_BASE_DIR}/config`          |
+| `KIBANA_DEFAULT_CONF_DIR`    | Kibana default configuration directory                                                        | `${SERVER_BASE_DIR}/config.default`  |
+| `KIBANA_LOGS_DIR`            | Kibana logs directory                                                                         | `${SERVER_BASE_DIR}/logs`            |
+| `KIBANA_TMP_DIR`             | Kibana temporary directory                                                                    | `${SERVER_BASE_DIR}/tmp`             |
+| `KIBANA_BIN_DIR`             | Kibana executable directory                                                                   | `${SERVER_BASE_DIR}/bin`             |
+| `KIBANA_PLUGINS_DIR`         | Kibana plugins directory                                                                      | `${SERVER_BASE_DIR}/plugins`         |
+| `KIBANA_DEFAULT_PLUGINS_DIR` | Kibana default plugins directory                                                              | `${SERVER_BASE_DIR}/plugins.default` |
+| `KIBANA_DATA_DIR`            | Kibana data directory                                                                         | `${SERVER_VOLUME_DIR}/data`          |
+| `KIBANA_MOUNTED_CONF_DIR`    | Directory for including custom configuration files (that override the default generated ones) | `${SERVER_VOLUME_DIR}/conf`          |
+| `KIBANA_CONF_FILE`           | Path to Kibana configuration file                                                             | `${SERVER_CONF_DIR}/kibana.yml`      |
+| `KIBANA_LOG_FILE`            | Path to the Kibana log file                                                                   | `${SERVER_LOGS_DIR}/kibana.log`      |
+| `KIBANA_PID_FILE`            | Path to the Kibana pid file                                                                   | `${SERVER_TMP_DIR}/kibana.pid`       |
+| `KIBANA_INITSCRIPTS_DIR`     | Path to the Kibana container init scripts directory                                           | `/docker-entrypoint-initdb.d`        |
+| `KIBANA_DAEMON_USER`         | Kibana system user                                                                            | `kibana`                             |
+| `KIBANA_DAEMON_GROUP`        | Kibana system group                                                                           | `kibana`                             |
 
 When you start the kibana image, you can adjust the configuration of the instance by passing one or more environment variables on the `docker run` command line.
 

@@ -13,13 +13,6 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 docker run --name neo4j bitnami/neo4j:latest
 ```
 
-### Docker Compose
-
-```console
-curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/neo4j/docker-compose.yml > docker-compose.yml
-docker-compose up -d
-```
-
 You can find the default credentials and available configuration options in the [Environment Variables](#environment-variables) section.
 
 ## Why use Bitnami Images?
@@ -28,7 +21,7 @@ You can find the default credentials and available configuration options in the 
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Neo4j in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -147,16 +140,17 @@ docker-compose up -d
 
 #### Customizable environment variables
 
-| Name                                      | Description                                   | Default Value |
-|-------------------------------------------|-----------------------------------------------|---------------|
-| `NEO4J_BIND_ADDRESS`                      | Neo4j bind address                            | `0.0.0.0`     |
-| `NEO4J_ALLOW_UPGRADE`                     | Allow automatic schema upgrades               | `true`        |
-| `NEO4J_PASSWORD`                          | Neo4j password.                               | `bitnami1`    |
-| `NEO4J_APOC_IMPORT_FILE_ENABLED`          | Allow importing files using the apoc library  | `true`        |
-| `NEO4J_APOC_IMPORT_FILE_USE_NEO4J_CONFIG` | Use neo4j configuration with the apoc library | `false`       |
-| `NEO4J_BOLT_PORT_NUMBER`                  | Port used for the bolt protocol.              | `7687`        |
-| `NEO4J_HTTP_PORT_NUMBER`                  | Port used for the http protocol.              | `7474`        |
-| `NEO4J_HTTPS_PORT_NUMBER`                 | Port used for the https protocol.             | `7473`        |
+| Name                                      | Description                                                                                                                                   | Default Value |
+|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `NEO4J_HOST`                              | Hostname used to configure Neo4j advertised address. It can be either an IP or a domain. If left empty, it will be resolved to the machine IP | `nil`         |
+| `NEO4J_BIND_ADDRESS`                      | Neo4j bind address                                                                                                                            | `0.0.0.0`     |
+| `NEO4J_ALLOW_UPGRADE`                     | Allow automatic schema upgrades                                                                                                               | `true`        |
+| `NEO4J_PASSWORD`                          | Neo4j password.                                                                                                                               | `bitnami1`    |
+| `NEO4J_APOC_IMPORT_FILE_ENABLED`          | Allow importing files using the apoc library                                                                                                  | `true`        |
+| `NEO4J_APOC_IMPORT_FILE_USE_NEO4J_CONFIG` | Use neo4j configuration with the apoc library                                                                                                 | `false`       |
+| `NEO4J_BOLT_PORT_NUMBER`                  | Port used for the bolt protocol.                                                                                                              | `7687`        |
+| `NEO4J_HTTP_PORT_NUMBER`                  | Port used for the http protocol.                                                                                                              | `7474`        |
+| `NEO4J_HTTPS_PORT_NUMBER`                 | Port used for the https protocol.                                                                                                             | `7473`        |
 
 #### Read-only environment variables
 
@@ -327,6 +321,12 @@ docker-compose up neo4j
 ### 3.4.3-r13
 
 * The Neo4j container has been migrated to a non-root user approach. Previously the container ran as the `root` user and the Neo4j daemon was started as the `neo4j` user. From now on, both the container and the Neo4j daemon run as user `1001`. As a consequence, the data directory must be writable by that user. You can revert this behavior by changing `USER 1001` to `USER root` in the Dockerfile.
+
+## Using `docker-compose.yaml`
+
+Please be aware this file has not undergone internal testing. Consequently, we advise its use exclusively for development or testing purposes.
+
+If you detect any issue in the `docker-compose.yaml` file, feel free to report it or contribute with a fix by following our [Contributing Guidelines](https://github.com/bitnami/containers/blob/main/CONTRIBUTING.md).
 
 ## Contributing
 

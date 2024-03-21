@@ -13,13 +13,6 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 docker run --name keycloak bitnami/keycloak:latest
 ```
 
-### Docker Compose
-
-```console
-curl -LO https://raw.githubusercontent.com/bitnami/containers/main/bitnami/keycloak/docker-compose.yml
-docker-compose up
-```
-
 **Warning**: This quick setup is only intended for development environments. You are encouraged to change the insecure default credentials and check out the available configuration options in the [Configuration](#configuration) section for a more secure deployment.
 
 ## Why use Bitnami Images?
@@ -28,7 +21,7 @@ docker-compose up
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Keycloak in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -73,39 +66,74 @@ docker build -t bitnami/APP:latest .
 
 ## Configuration
 
-### Admin credentials
+### Environment variables
 
-The Bitnami Keycloak container can create a default admin user by setting the following environment variables:
+#### Customizable environment variables
 
-* `KEYCLOAK_CREATE_ADMIN_USER`: Create administrator user on boot. Default: **true**.
-* `KEYCLOAK_ADMIN_USER`: Administrator default user. Default: **user**.
-* `KEYCLOAK_ADMIN_PASSWORD`: Administrator default password. Default: **bitnami**.
+| Name                                                        | Description                                                                                           | Default Value                 |
+|-------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------|
+| `KEYCLOAK_MOUNTED_CONF_DIR`                                 | Directory for including custom configuration files (that override the default generated ones)         | `${KEYCLOAK_VOLUME_DIR}/conf` |
+| `KEYCLOAK_ADMIN`                                            | Keycloak administrator user                                                                           | `user`                        |
+| `KEYCLOAK_ADMIN_PASSWORD`                                   | Keycloak administrator password                                                                       | `bitnami`                     |
+| `KEYCLOAK_HTTP_RELATIVE_PATH`                               | Set the path relative to "/" for serving resources.                                                   | `/`                           |
+| `KEYCLOAK_HTTP_PORT`                                        | HTTP port                                                                                             | `8080`                        |
+| `KEYCLOAK_HTTPS_PORT`                                       | HTTPS port                                                                                            | `8443`                        |
+| `KEYCLOAK_BIND_ADDRESS`                                     | Bind address                                                                                          | `$(hostname --fqdn)`          |
+| `KEYCLOAK_HOSTNAME`                                         | Keycloak hostname                                                                                     | `nil`                         |
+| `KEYCLOAK_INIT_MAX_RETRIES`                                 | Maximum retries for checking that the database works                                                  | `10`                          |
+| `KEYCLOAK_CACHE_TYPE`                                       | Defines the cache mechanism for high-availability.                                                    | `ispn`                        |
+| `KEYCLOAK_CACHE_STACK`                                      | Apply a specific cache stack                                                                          | `nil`                         |
+| `KEYCLOAK_EXTRA_ARGS`                                       | Add extra startup parameters to keycloak                                                              | `nil`                         |
+| `KEYCLOAK_ENABLE_STATISTICS`                                | Enable metrics for the database                                                                       | `false`                       |
+| `KEYCLOAK_ENABLE_HEALTH_ENDPOINTS`                          | Enable health endpoints                                                                               | `false`                       |
+| `KEYCLOAK_ENABLE_HTTPS`                                     | Enable SSL certificates                                                                               | `false`                       |
+| `KEYCLOAK_HTTPS_TRUST_STORE_FILE`                           | Path to the SSL truststore file                                                                       | `nil`                         |
+| `KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD`                       | Password for decrypting the truststore file                                                           | `nil`                         |
+| `KEYCLOAK_HTTPS_KEY_STORE_FILE`                             | Path to the SSL keystore file                                                                         | `nil`                         |
+| `KEYCLOAK_HTTPS_KEY_STORE_PASSWORD`                         | Password for decrypting the keystore file                                                             | `nil`                         |
+| `KEYCLOAK_HTTPS_USE_PEM`                                    | Set to true to configure HTTPS using PEM certificates                                                 | `false`                       |
+| `KEYCLOAK_HTTPS_CERTIFICATE_FILE`                           | Path to the PEM certificate file                                                                      | `nil`                         |
+| `KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE`                       | Path to the PEM key file                                                                              | `nil`                         |
+| `KEYCLOAK_SPI_TRUSTSTORE_FILE`                              | Path to the Keycloak SPI truststore file                                                              | `nil`                         |
+| `KEYCLOAK_SPI_TRUSTSTORE_PASSWORD`                          | Password for decrypting the SPI truststore file                                                       | `nil`                         |
+| `KEYCLOAK_SPI_TRUSTSTORE_FILE_HOSTNAME_VERIFICATION_POLICY` | Hostqname verification policy for SPI connection over HTTPS/TLS                                       | `nil`                         |
+| `KEYCLOAK_LOG_LEVEL`                                        | Keycloak log level                                                                                    | `info`                        |
+| `KEYCLOAK_LOG_OUTPUT`                                       | Keycloak log output                                                                                   | `default`                     |
+| `KEYCLOAK_ROOT_LOG_LEVEL`                                   | Keycloak root log level                                                                               | `INFO`                        |
+| `KEYCLOAK_PROXY`                                            | Keycloak type proxy                                                                                   | `passthrough`                 |
+| `KEYCLOAK_PRODUCTION`                                       | Run in production mode                                                                                | `false`                       |
+| `KEYCLOAK_EXTRA_ARGS_PREPENDED`                             | Run with flags which are applied directly to keycloak executable                                      | `nil`                         |
+| `KEYCLOAK_DATABASE_VENDOR`                                  | Database vendor                                                                                       | `postgresql`                  |
+| `KEYCLOAK_DATABASE_HOST`                                    | Database backend hostname                                                                             | `postgresql`                  |
+| `KEYCLOAK_DATABASE_PORT`                                    | Database backend port                                                                                 | `5432`                        |
+| `KEYCLOAK_DATABASE_USER`                                    | Database backend username                                                                             | `bn_keycloak`                 |
+| `KEYCLOAK_DATABASE_NAME`                                    | Database name                                                                                         | `bitnami_keycloak`            |
+| `KEYCLOAK_DATABASE_PASSWORD`                                | Database backend password                                                                             | `nil`                         |
+| `KEYCLOAK_DATABASE_SCHEMA`                                  | PostgreSQL database schema                                                                            | `public`                      |
+| `KEYCLOAK_JDBC_PARAMS`                                      | Extra JDBC connection parameters for the database (e.g.: `sslmode=verify-full&connectTimeout=30000`\) | `nil`                         |
+| `KEYCLOAK_JDBC_DRIVER`                                      | JDBC driver to set in the connection string for the database                                          | `postgresql`                  |
+| `KEYCLOAK_DAEMON_USER`                                      | Keycloak daemon user when running as root                                                             | `keycloak`                    |
+| `KEYCLOAK_DAEMON_GROUP`                                     | Keycloak daemon group when running as root                                                            | `keycloak`                    |
 
-### Connecting to a database
+#### Read-only environment variables
 
-The Bitnami Keycloak container can connect to a database by setting the following environment variables:
-
-* `KEYCLOAK_DATABASE_VENDOR`: Database vendor. Default: **postgresql**. Use **dev-mem** or **dev-file** to use an in-memory or file-based database for development purposes.
-
-### PostgreSQL database connection configuration
-
-The Bitnami Keycloak container requires a PostgreSQL database to work. This is configured with the following environment variables:
-
-* `KEYCLOAK_DATABASE_HOST`: PostgreSQL host. Default: **postgresql**.
-* `KEYCLOAK_DATABASE_PORT`: PostgreSQL port. Default: **5432**.
-* `KEYCLOAK_DATABASE_NAME`: PostgreSQL database name. Default: **bitnami_keycloak**.
-* `KEYCLOAK_DATABASE_USER`: PostgreSQL database user. Default: **bn_keycloak**.
-* `KEYCLOAK_DATABASE_PASSWORD`: PostgreSQL database password. No defaults.
-* `KEYCLOAK_DATABASE_SCHEMA`: PostgreSQL database schema. Default: **public**.
-* `KEYCLOAK_JDBC_PARAMS`: PostgreSQL database JDBC parameters (example: `sslmode=verify-full&connectTimeout=30000`). No defaults.
-
-### Port and address binding
-
-The listening port and listening address can be configured with the following environment variables:
-
-* `KEYCLOAK_HTTP_PORT`: Keycloak HTTP port. Default: **8080**.
-* `KEYCLOAK_HTTPS_PORT`: Keycloak HTTPS port. Default: **8443**.
-* `KEYCLOAK_BIND_ADDRESS`: Keycloak bind address. Default: **0.0.0.0**.
+| Name                         | Description                                             | Value                             |
+|------------------------------|---------------------------------------------------------|-----------------------------------|
+| `BITNAMI_VOLUME_DIR`         | Directory where to mount volumes.                       | `/bitnami`                        |
+| `JAVA_HOME`                  | Java installation directory                             | `/opt/bitnami/java`               |
+| `KEYCLOAK_BASE_DIR`          | Keycloak base directory                                 | `/opt/bitnami/keycloak`           |
+| `KEYCLOAK_BIN_DIR`           | Keycloak bin directory                                  | `$KEYCLOAK_BASE_DIR/bin`          |
+| `KEYCLOAK_PROVIDERS_DIR`     | Keycloak Wildfly extensions directory                   | `$KEYCLOAK_BASE_DIR/providers`    |
+| `KEYCLOAK_LOG_DIR`           | Keycloak bin directory                                  | `$KEYCLOAK_PROVIDERS_DIR/log`     |
+| `KEYCLOAK_TMP_DIR`           | Keycloak tmp directory                                  | `$KEYCLOAK_PROVIDERS_DIR/tmp`     |
+| `KEYCLOAK_DOMAIN_TMP_DIR`    | Keycloak tmp directory                                  | `$KEYCLOAK_BASE_DIR/domain/tmp`   |
+| `WILDFLY_BASE_DIR`           | Wildfly base directory                                  | `/opt/bitnami/wildfly`            |
+| `KEYCLOAK_VOLUME_DIR`        | Path to keycloak mount directory                        | `/bitnami/keycloak`               |
+| `KEYCLOAK_CONF_DIR`          | Keycloak configuration directory                        | `$KEYCLOAK_BASE_DIR/conf`         |
+| `KEYCLOAK_DEFAULT_CONF_DIR`  | Keycloak default configuration directory                | `$KEYCLOAK_BASE_DIR/conf.default` |
+| `KEYCLOAK_INITSCRIPTS_DIR`   | Path to keycloak init scripts directory                 | `/docker-entrypoint-initdb.d`     |
+| `KEYCLOAK_CONF_FILE`         | Name of the keycloak configuration file (relative path) | `keycloak.conf`                   |
+| `KEYCLOAK_DEFAULT_CONF_FILE` | Name of the keycloak configuration file (relative path) | `keycloak.conf`                   |
 
 ### Extra arguments to Keycloak startup
 
@@ -210,7 +238,7 @@ The Bitnami Keycloak container can activate different set of statistics (databas
 
 ### Enabling health endpoints
 
-The Bitnami Keycloak container can activate several endpoints providing information about the health of Keycloak, by setting the environment variable `KEYCLOAK_ENABLE_HEALTH_ENDPOINTS=true`.  
+The Bitnami Keycloak container can activate several endpoints providing information about the health of Keycloak, by setting the environment variable `KEYCLOAK_ENABLE_HEALTH_ENDPOINTS=true`.
 See [the official documentation](https://www.keycloak.org/server/health) for more information about these endpoints.
 
 ### Full configuration
@@ -251,6 +279,12 @@ After that, your changes will be taken into account in the server's behaviour.
 
 Keycloak 17 is powered by Quarkus and to deploy it in production mode it is necessary to set up TLS.
 To do this you need to set `KEYCLOAK_PRODUCTION` to **true** and configure TLS
+
+## Using `docker-compose.yaml`
+
+Please be aware this file has not undergone internal testing. Consequently, we advise its use exclusively for development or testing purposes. For production-ready deployments, we highly recommend utilizing its associated [Bitnami Helm chart](https://github.com/bitnami/charts/tree/main/bitnami/keycloak).
+
+If you detect any issue in the `docker-compose.yaml` file, feel free to report it or contribute with a fix by following our [Contributing Guidelines](https://github.com/bitnami/containers/blob/main/CONTRIBUTING.md).
 
 ## Contributing
 

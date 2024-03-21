@@ -19,7 +19,7 @@ docker run --name grafana-mimir bitnami/grafana-mimir:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Grafana Mimir in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -74,19 +74,13 @@ In order for the container to work, you need to mount your custom `mimir.yaml` f
 docker run --rm --name grafana-mimir -v /path/to/mimir.yaml:/bitnami/grafana-mimir/conf/mimir.yaml bitnami/grafana-mimir:latest
 ```
 
-Using docker-compose:
-
-```yaml
-version: '2'
-services:
-
-  grafana-mimir:
-    image: grafana-mimir
-    volumes:
-      - /path/to/mimir.yaml:/bitnami/grafana-mimir/conf/mimir.yaml
-```
-
 Check the [official Grafana Mimir documentation](https://grafana.com/docs/mimir/latest/) to understand the possible configurations.
+
+## Notable Changes
+
+### Starting January 16, 2024
+
+* The `docker-compose.yaml` file has been removed, as it was solely intended for internal testing purposes.
 
 ## Contributing
 

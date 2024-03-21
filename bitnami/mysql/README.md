@@ -19,7 +19,7 @@ docker run --name mysql -e ALLOW_EMPTY_PASSWORD=yes bitnami/mysql:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use MySQL in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -196,6 +196,7 @@ docker-compose up -d
 | `DB_BIN_DIR`                  | MySQL directory where executable binary files are located. | `${DB_BASE_DIR}/bin`          |
 | `DB_SBIN_DIR`                 | MySQL directory where service binary files are located.    | `${DB_BASE_DIR}/bin`          |
 | `DB_CONF_DIR`                 | MySQL configuration directory.                             | `${DB_BASE_DIR}/conf`         |
+| `DB_DEFAULT_CONF_DIR`         | MySQL default configuration directory.                     | `${DB_BASE_DIR}/conf.default` |
 | `DB_LOGS_DIR`                 | MySQL logs directory.                                      | `${DB_BASE_DIR}/logs`         |
 | `DB_TMP_DIR`                  | MySQL directory for temporary files.                       | `${DB_BASE_DIR}/tmp`          |
 | `DB_CONF_FILE`                | Main MySQL configuration file.                             | `${DB_CONF_DIR}/my.cnf`       |
@@ -425,7 +426,6 @@ The above command scales up the number of slaves to `3`. You can scale down in t
 If your master database is missing some binary files, the replication will break. It's possible to add `MYSQL_REPLICATION_SLAVE_DUMP=true` to make a dump on the master and import it on the slave.
 
 > **Note**: The master database must be only used by this process until the end to avoid missing data.
-> **Note**: This process will use "RESET MASTER" on the master database, removing all binary log files that are listed in the index file. It is recommended to make a backup of binary files to avoid possible data loss, in case something goes wrong.
 
 ### Configuration file
 
@@ -671,12 +671,12 @@ docker-compose up mysql
 * Backwards compatibility is not guaranteed when data is persisted using docker-compose. You can use the workaround below to overcome it:
 
 ```console
-$ docker-compose down
+docker-compose down
 ## Change the mount point
 sed -i -e 's#mysql_data:/bitnami#mysql_data:/bitnami/mysql/data#g' docker-compose.yml
 ## Pull the latest bitnami/mysql image
-$ docker pull bitnami/mysql:latest
-$ docker-compose up -d
+docker pull bitnami/mysql:latest
+docker-compose up -d
 ```
 
 ### 5.7.22-r18 and 8.0.11-r16

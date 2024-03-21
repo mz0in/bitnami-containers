@@ -61,7 +61,7 @@ jobs:
       pull-requests: write
     needs: get-containers
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
         name: Checkout Repository
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -93,7 +93,7 @@ jobs:
       contents: read
     env:
       CSP_API_URL: https://console.cloud.vmware.com
-      CSP_API_TOKEN: ${{ secrets.CSP_API_TESTING_TOKEN }}
+      CSP_API_TOKEN: ${{ secrets.CSP_API_TOKEN }}
       VIB_PUBLIC_URL: https://cp.bromelia.vmware.com
     continue-on-error: false
     strategy:
@@ -102,7 +102,7 @@ jobs:
       matrix:
         container: ${{ fromJSON(needs.get-containers.outputs.containers) }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
         name: Checkout Repository
         with:
           # Full history is not required anymore

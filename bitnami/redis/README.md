@@ -21,7 +21,7 @@ docker run --name redis -e ALLOW_EMPTY_PASSWORD=yes bitnami/redis:latest
 * With Bitnami images the latest bug fixes and features are available as soon as possible.
 * Bitnami containers, virtual machines and cloud images use the same components and configuration approach - making it easy to switch between formats based on your project needs.
 * All our images are based on [**minideb**](https://github.com/bitnami/minideb) -a minimalist Debian based container image that gives you a small base container image and the familiarity of a leading Linux distribution- or **scratch** -an explicitly empty image-.
-* All Bitnami images available in Docker Hub are signed with [Docker Content Trust (DCT)](https://docs.docker.com/engine/security/trust/content_trust/). You can use `DOCKER_CONTENT_TRUST=1` to verify the integrity of the images.
+* All Bitnami images available in Docker Hub are signed with [Notation](https://notaryproject.dev/). [Check this post](https://blog.bitnami.com/2024/03/bitnami-packaged-containers-and-helm.html) to know how to verify the integrity of the images.
 * Bitnami container images are released on a regular basis with the latest distribution packages available.
 
 Looking to use Redis&reg; in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
@@ -196,6 +196,7 @@ docker-compose up -d
 | `REDIS_VOLUME_DIR`          | Persistence base directory            | `/bitnami/redis`                |
 | `REDIS_BASE_DIR`            | Redis installation directory          | `${BITNAMI_ROOT_DIR}/redis`     |
 | `REDIS_CONF_DIR`            | Redis configuration directory         | `${REDIS_BASE_DIR}/etc`         |
+| `REDIS_DEFAULT_CONF_DIR`    | Redis default configuration directory | `${REDIS_BASE_DIR}/etc.default` |
 | `REDIS_MOUNTED_CONF_DIR`    | Redis mounted configuration directory | `${REDIS_BASE_DIR}/mounted-etc` |
 | `REDIS_CONF_FILE`           | Redis configuration file              | `${REDIS_CONF_DIR}/redis.conf`  |
 | `REDIS_LOG_DIR`             | Redis logs directory                  | `${REDIS_BASE_DIR}/logs`        |
@@ -309,7 +310,7 @@ services:
 Redis 6.0 features a [new multi-threading model](https://segmentfault.com/a/1190000040376111/en). You can set both `io-threads` and `io-threads-do-reads` though the env vars `REDIS_IO_THREADS` and `REDIS_IO_THREADS_DO_READS`
 
 ```console
-docker run --name redis -e REDIS_IO_THREADS=4 -e REDIS_IO_THREADS_DO_READS=true bitnami/redis:latest
+docker run --name redis -e REDIS_IO_THREADS=4 -e REDIS_IO_THREADS_DO_READS=yes bitnami/redis:latest
 ```
 
 ### Disabling AOF persistence
@@ -475,7 +476,8 @@ Starting with version 6, Redis(R) adds the support for SSL/TLS connections. Shou
 * `REDIS_TLS_PORT_NUMBER`: Port used for TLS secure traffic. Defaults to `6379`.
 * `REDIS_TLS_CERT_FILE`: File containing the certificate file for the TLS traffic. No defaults.
 * `REDIS_TLS_KEY_FILE`: File containing the key for certificate. No defaults.
-* `REDIS_TLS_CA_FILE`: File containing the CA of the certificate. No defaults.
+* `REDIS_TLS_CA_FILE`: File containing the CA of the certificate (takes precedence over `REDIS_TLS_CA_DIR`). No defaults.
+* `REDIS_TLS_CA_DIR`: Directory containing the CA certificates. No defaults.
 * `REDIS_TLS_DH_PARAMS_FILE`: File containing DH params (in order to support DH based ciphers). No defaults.
 * `REDIS_TLS_AUTH_CLIENTS`: Whether to require clients to authenticate or not. Defaults to `yes`.
 
